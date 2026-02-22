@@ -1,0 +1,59 @@
+import importlib
+import sys
+
+
+def _log(message):
+    try:
+        import FreeCAD as App
+
+        App.Console.PrintMessage("[enclosure_workbench] %s\n" % message)
+    except Exception:
+        pass
+
+
+def _log_error(message):
+    try:
+        import FreeCAD as App
+
+        App.Console.PrintError("[enclosure_workbench] %s\n" % message)
+    except Exception:
+        pass
+
+
+def reload_enclosure_workbench():
+    targets = [
+        name
+        for name in list(sys.modules)
+        if name.startswith("enclosure_workbench")
+        or name.startswith("freecad.enclosure_workbench")
+    ]
+
+    for name in sorted(targets, key=len, reverse=True):
+        module = sys.modules.get(name)
+        if module is None:
+            continue
+        try:
+            importlib.reload(module)
+        except Exception as exc:
+            _log_error("reload failed for %s: %s" % (name, exc))
+
+    try:
+        import freecad.enclosure_workbench.init_gui as init_gui
+
+        init_gui.register_workbench()
+    except Exception as exc:
+        _log_error("register_workbench failed: %s" % exc)
+        return
+
+    try:
+        import FreeCAD as App
+
+        if App.ActiveDocument is not None:
+            App.ActiveDocument.recompute()
+    except Exception:
+        pass
+
+    _log("Reload complete")
+
+
+reload_enclosure_workbench()
