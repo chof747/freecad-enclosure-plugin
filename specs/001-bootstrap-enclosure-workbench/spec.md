@@ -3,7 +3,7 @@
 **Feature Branch**: `001-bootstrap-enclosure-workbench`  
 **Created**: 2026-02-19  
 **Status**: Draft  
-**Input**: User description: "basic-structure: I want to start with a basic plugin or workbench structure whatever fits best which should 1. Create the projects scaffold 2. Setup the packaging, deployment and installation procedure 3. Sets up all the necessary testing, run and debugging configurations 4. Has as a first feature a user action (in a toolbar) that creates a simple project box consiting of a hollow body and a matching lit with basic parameters of length, width, height, wall thickness and gap (to define 3d printing tolerances) In the course of this feature I also want to define the basic architecture of the overall solution for the overall idea sketched in @docs/idea.md"
+**Input**: User description: "basic-structure: I want to start with a basic plugin or workbench structure whatever fits best which should 1. Create the projects scaffold 2. Setup the packaging, deployment and installation procedure 3. Sets up all the necessary testing, run and debugging configurations 4. Has as a first feature a user action (in a toolbar) that creates a simple project box consiting of a hollow body and a matching lit with basic parameters of length, width, height, wall thickness, lid thickness and gap (to define 3d printing tolerances) In the course of this feature I also want to define the basic architecture of the overall solution for the overall idea sketched in @docs/idea.md"
 
 ## Clarifications
 
@@ -28,7 +28,7 @@ parametric enclosure outcome in a single workflow.
 
 **Independent Test**: In a clean document, run the toolbar action, verify one
 parametric enclosure object is created in the model tree, edit length/width/height/
-wall thickness/gap in its Data section, and verify both body and lid geometry
+wall thickness/lid thickness/gap in its Data section, and verify both body and lid geometry
 regenerate from that single object.
 
 **Acceptance Scenarios**:
@@ -113,7 +113,7 @@ existing model-generation workflow.
   FeaturePython-style parametric model object in the tree, with body/lid generated
   from that object's parameters during document recompute.
 - **FR-004**: System MUST allow users to set and edit length, width, height, wall
-  thickness, and gap as named parameters before and after initial creation, including
+  thickness, lid thickness and gap as named parameters before and after initial creation, including
   editing an existing enclosure through the model view Data section, using
   millimeters as the canonical parameter unit.
 - **FR-004a**: System MUST keep lid and body outer lateral dimensions equal
@@ -124,7 +124,7 @@ existing model-generation workflow.
 - **FR-005a**: System MUST prefill all five enclosure parameters with fixed MVP
   default values on creation while allowing user override before confirmation.
 - **FR-005b**: System MUST use the following MVP defaults: length 80 mm, width 50
-  mm, height 25 mm, wall thickness 2.0 mm, and gap 0.20 mm.
+  mm, height 25 mm, wall thickness 2.0 mm, lid thickness to 3 mm and gap 0.20 mm.
 - **FR-006**: System MUST define and document installation, update, and deployment
   steps that a new user can execute without source-level modifications.
 - **FR-007**: System MUST define documented run and debug workflows for maintainers,
@@ -148,7 +148,7 @@ existing model-generation workflow.
 - **ITR-002**: The feature MUST record dependency and reuse decisions so maintainers
   can verify that reusable capabilities were evaluated before custom additions.
 - **ITR-003**: The feature MUST define parameter names, units, defaults, and allowed
-  ranges for length, width, height, wall thickness, and gap, with millimeters as the
+  ranges for length, width, height, wall thickness, lid thickness and gap, with millimeters as the
   canonical unit.
 - **ITR-004**: The feature MUST define quality gates that include lint conformance,
   automated checks, and an in-app smoke path for toolbar-driven enclosure creation.
@@ -174,7 +174,7 @@ existing model-generation workflow.
 ### Key Entities *(include if feature involves data)*
 
 - **EnclosureParameterSet**: User-controlled dimensions and tolerance inputs,
-  including length, width, height, wall thickness, gap, unit context, and defaults.
+  including length, width, height, wall thickness, lid thickness, gap, unit context, and defaults.
 - **EnclosureModelSet**: The resulting paired geometry outputs (body and lid) and
   their linkage to one parameter set for regeneration.
 - **WorkbenchAction**: A user-invoked action exposed in the toolbar that triggers

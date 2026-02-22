@@ -20,6 +20,7 @@ PARAMETER_PROPERTY_MAP = {
     "Width": "width",
     "Height": "height",
     "WallThickness": "wall_thickness",
+    "LidThickness": "lid_thickness",
     "Gap": "gap",
 }
 
@@ -154,6 +155,11 @@ class FreeCADDocumentAdapter:
                 float(lid.BoundBox.ZLength) if lid else 0.0,
             ),
             lid_inner=(0.0, 0.0, 0.0),
+            body_inner_offset=(0.0, 0.0, 0.0),
+            lid_offset=(0.0, 0.0, 0.0),
+            lip_outer=(0.0, 0.0, 0.0),
+            lip_inner=(0.0, 0.0, 0.0),
+            lip_offset=(0.0, 0.0, 0.0),
         )
 
         now = datetime.now(timezone.utc)
@@ -262,6 +268,7 @@ class FreeCADDocumentAdapter:
         feature.Width = float(parameters.width)
         feature.Height = float(parameters.height)
         feature.WallThickness = float(parameters.wall_thickness)
+        feature.LidThickness = float(parameters.lid_thickness)
         feature.Gap = float(parameters.gap)
 
     def _parameters_from_feature(self, feature: Any) -> EnclosureParameters:

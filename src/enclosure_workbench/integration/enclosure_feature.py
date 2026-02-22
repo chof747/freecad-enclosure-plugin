@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from enclosure_workbench.domain.enclosure_builder import EnclosureBuilder
 from enclosure_workbench.domain.parameters import (
     EnclosureParameters,
     validate_parameters,
@@ -73,6 +74,13 @@ class EnclosureFeatureProxy:
             "Wall thickness",
         )
         _set_if_missing(
+            obj,
+            "App::PropertyLength",
+            "LidThickness",
+            "Parameters",
+            "Lid thickness",
+        )
+        _set_if_missing(
             obj, "App::PropertyLength", "Gap", "Parameters", "Lid fit tolerance"
         )
         if _set_if_missing(
@@ -102,59 +110,35 @@ class EnclosureFeatureProxy:
                 width=float(fp.Width),
                 height=float(fp.Height),
                 wall_thickness=float(fp.WallThickness),
+                lid_thickness=float(fp.LidThickness),
                 gap=float(fp.Gap),
             )
             validate_parameters(params)
+            geometry = EnclosureBuilder().build(params)
 
-            body_outer = Part.makeBox(params.length, params.width, params.height)
+            body_outer = Part.makeBox(*geometry.body_outer)
             body_inner = Part.makeBox(
-                params.length - (2 * params.wall_thickness),
-                params.width - (2 * params.wall_thickness),
-                params.height - params.wall_thickness,
-                app.Vector(
-                    params.wall_thickness, params.wall_thickness, params.wall_thickness
-                ),
+                *geometry.body_inner,
+                app.Vector(*geometry.body_inner_offset),
             )
             body = body_outer.cut(body_inner)
 
-            lid_height = max(params.wall_thickness * 2.0, params.height * 0.2)
-            lip_height = max(params.wall_thickness, lid_height * 0.6)
-            lip_thickness = max(params.wall_thickness * 0.5, 0.6)
-
             lid_outer = Part.makeBox(
-                params.length,
-                params.width,
-                lid_height,
-                app.Vector(0, 0, params.height + params.gap),
-            )
-
-            lip_outer_length = (
-                params.length - (2 * params.wall_thickness) - (2 * params.gap)
-            )
-            lip_outer_width = (
-                params.width - (2 * params.wall_thickness) - (2 * params.gap)
+                *geometry.lid_outer,
+                app.Vector(*geometry.lid_offset),
             )
             lip_outer = Part.makeBox(
-                lip_outer_length,
-                lip_outer_width,
-                lip_height,
-                app.Vector(
-                    params.wall_thickness + params.gap,
-                    params.wall_thickness + params.gap,
-                    params.height + params.gap - lip_height,
-                ),
+                *geometry.lip_outer,
+                app.Vector(*geometry.lip_offset),
             )
-
-            lip_inner_length = max(lip_outer_length - (2 * lip_thickness), 0.1)
-            lip_inner_width = max(lip_outer_width - (2 * lip_thickness), 0.1)
             lip_inner = Part.makeBox(
-                lip_inner_length,
-                lip_inner_width,
-                lip_height,
+                *geometry.lip_inner,
                 app.Vector(
-                    params.wall_thickness + params.gap + lip_thickness,
-                    params.wall_thickness + params.gap + lip_thickness,
-                    params.height + params.gap - lip_height,
+                    geometry.lip_offset[0]
+                    + ((geometry.lip_outer[0] - geometry.lip_inner[0]) / 2.0),
+                    geometry.lip_offset[1]
+                    + ((geometry.lip_outer[1] - geometry.lip_inner[1]) / 2.0),
+                    geometry.lip_offset[2],
                 ),
             )
 

@@ -10,6 +10,7 @@ DEFAULT_PARAMETER_VALUES = {
     "width": 50.0,
     "height": 25.0,
     "wall_thickness": 2.0,
+    "lid_thickness": 3.0,
     "gap": 0.20,
 }
 
@@ -20,6 +21,7 @@ class EnclosureParameters:
     width: float
     height: float
     wall_thickness: float
+    lid_thickness: float
     gap: float
 
     def to_dict(self) -> dict[str, float]:

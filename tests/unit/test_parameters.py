@@ -13,6 +13,7 @@ def test_default_parameters_match_contract() -> None:
         "width": 50.0,
         "height": 25.0,
         "wall_thickness": 2.0,
+        "lid_thickness": 3.0,
         "gap": 0.20,
     }
 
