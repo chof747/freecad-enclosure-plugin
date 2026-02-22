@@ -2,6 +2,10 @@
 
 Scaffold for a FreeCAD workbench that creates and updates a parametric enclosure set.
 
+Architecture and code component overview:
+
+- `docs/solution-architecture.md`
+
 ## Development
 
 Install dependencies:
