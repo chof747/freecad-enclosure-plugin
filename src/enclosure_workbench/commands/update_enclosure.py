@@ -9,6 +9,7 @@ from enclosure_workbench.domain.parameters import (
     validate_parameters,
 )
 from enclosure_workbench.domain.results import CommandResult, failure, success
+from enclosure_workbench.integration.document_adapter import DocumentAdapter
 from enclosure_workbench.integration.freecad_document import FreeCADDocumentAdapter
 
 
@@ -16,10 +17,10 @@ def update_enclosure_set(
     enclosure_id: str,
     parameters: dict[str, float],
     *,
-    document: FreeCADDocumentAdapter | None = None,
+    document: DocumentAdapter | None = None,
     builder: EnclosureBuilder | None = None,
 ) -> CommandResult:
-    adapter = document or FreeCADDocumentAdapter()
+    adapter: DocumentAdapter = document or FreeCADDocumentAdapter()
     enclosure_builder = builder or EnclosureBuilder()
 
     record = adapter.get_enclosure(enclosure_id)

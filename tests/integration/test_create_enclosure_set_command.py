@@ -1,6 +1,6 @@
 from enclosure_workbench.commands.create_enclosure import create_enclosure_set
 from enclosure_workbench.commands.update_enclosure import update_enclosure_set
-from enclosure_workbench.integration.freecad_document import FreeCADDocumentAdapter
+from enclosure_workbench.integration.in_memory_document import InMemoryDocumentAdapter
 
 
 def test_toolbar_create_and_update_flow(writable_document, object_registry) -> None:
@@ -28,7 +28,7 @@ def test_no_writable_document_returns_clear_error(
 
 
 def test_data_section_update_hook_payload() -> None:
-    adapter = FreeCADDocumentAdapter(writable=True)
+    adapter = InMemoryDocumentAdapter(writable=True)
     payload = adapter.apply_data_section_update("enclosure_001", {"gap": 0.3})
     assert payload["trigger"] == "data_section_recompute"
     assert payload["parameters"]["gap"] == 0.3

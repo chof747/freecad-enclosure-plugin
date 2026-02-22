@@ -10,6 +10,7 @@ from enclosure_workbench.domain.parameters import (
     validate_parameters,
 )
 from enclosure_workbench.domain.results import failure, success, CommandResult
+from enclosure_workbench.integration.document_adapter import DocumentAdapter
 from enclosure_workbench.integration.freecad_document import FreeCADDocumentAdapter
 from enclosure_workbench.integration.object_registry import ObjectRegistry
 
@@ -18,11 +19,11 @@ def create_enclosure_set(
     name: str | None = None,
     parameters: dict[str, float] | None = None,
     *,
-    document: FreeCADDocumentAdapter | None = None,
+    document: DocumentAdapter | None = None,
     registry: ObjectRegistry | None = None,
     builder: EnclosureBuilder | None = None,
 ) -> CommandResult:
-    adapter = document or FreeCADDocumentAdapter()
+    adapter: DocumentAdapter = document or FreeCADDocumentAdapter()
     identities = registry or ObjectRegistry()
     enclosure_builder = builder or EnclosureBuilder()
 

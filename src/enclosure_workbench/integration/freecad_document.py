@@ -1,9 +1,7 @@
-"""FreeCAD document adapter with test-friendly fallback behavior."""
+"""Real FreeCAD document adapter (GUI/runtime path)."""
 
 from __future__ import annotations
 
-from copy import deepcopy
-from dataclasses import dataclass
 from datetime import datetime, timezone
 from typing import Any
 
@@ -13,6 +11,7 @@ from enclosure_workbench.integration.enclosure_feature import (
     EnclosureFeatureProxy,
     EnclosureViewProvider,
 )
+from enclosure_workbench.integration.enclosure_record import EnclosureRecord
 
 
 PARAMETER_PROPERTY_MAP = {
@@ -25,24 +24,9 @@ PARAMETER_PROPERTY_MAP = {
 }
 
 
-@dataclass
-class EnclosureRecord:
-    id: str
-    name: str
-    parameters: EnclosureParameters
-    body_object_name: str
-    lid_object_name: str
-    geometry: EnclosureGeometry
-    status: str
-    created_at: datetime
-    updated_at: datetime
-    container_object_name: str | None = None
-
-
 class FreeCADDocumentAdapter:
     def __init__(self, writable: bool = True) -> None:
         self._writable = writable
-        self._records: dict[str, EnclosureRecord] = {}
         self._app = None
         self._doc = None
         try:
@@ -55,11 +39,7 @@ class FreeCADDocumentAdapter:
             self._doc = None
 
     def is_writable(self) -> bool:
-        if not self._writable:
-            return False
-        if self._app is None:
-            return True
-        return self._doc is not None
+        return bool(self._writable and self._doc is not None)
 
     def add_enclosure(
         self,
@@ -68,25 +48,9 @@ class FreeCADDocumentAdapter:
         parameters: EnclosureParameters,
         geometry: EnclosureGeometry,
     ) -> EnclosureRecord:
-        now = datetime.now(timezone.utc)
-        if self._doc is None:
-            record = EnclosureRecord(
-                id=enclosure_id,
-                name=name,
-                parameters=parameters,
-                body_object_name=f"{name}_body",
-                lid_object_name=f"{name}_lid",
-                geometry=geometry,
-                status="valid",
-                created_at=now,
-                updated_at=now,
-                container_object_name=name,
-            )
-            self._records[enclosure_id] = record
-            return deepcopy(record)
-
         feature = self._create_feature_object(name, enclosure_id, parameters)
-        record = EnclosureRecord(
+        now = datetime.now(timezone.utc)
+        return EnclosureRecord(
             id=enclosure_id,
             name=name,
             parameters=parameters,
@@ -98,8 +62,6 @@ class FreeCADDocumentAdapter:
             updated_at=now,
             container_object_name=feature.Name,
         )
-        self._records[enclosure_id] = record
-        return deepcopy(record)
 
     def update_enclosure(
         self,
@@ -107,19 +69,13 @@ class FreeCADDocumentAdapter:
         parameters: EnclosureParameters,
         geometry: EnclosureGeometry,
     ) -> EnclosureRecord:
-        if self._doc is None:
-            record = self._records[enclosure_id]
-            record.parameters = parameters
-            record.geometry = geometry
-            record.updated_at = datetime.now(timezone.utc)
-            return deepcopy(record)
-
+        doc = self._require_doc()
         feature = self._find_feature_by_id(enclosure_id)
         if feature is None:
             raise KeyError(enclosure_id)
 
         self._set_feature_parameters(feature, parameters)
-        self._doc.recompute()
+        doc.recompute()
 
         updated = self.get_enclosure(enclosure_id)
         if updated is None:
@@ -128,10 +84,6 @@ class FreeCADDocumentAdapter:
         return updated
 
     def get_enclosure(self, enclosure_id: str) -> EnclosureRecord | None:
-        if self._doc is None:
-            record = self._records.get(enclosure_id)
-            return deepcopy(record) if record else None
-
         feature = self._find_feature_by_id(enclosure_id)
         if feature is None:
             return None
@@ -177,11 +129,12 @@ class FreeCADDocumentAdapter:
         )
 
     def list_enclosures(self) -> list[EnclosureRecord]:
-        if self._doc is None:
-            return [deepcopy(record) for record in self._records.values()]
+        doc = self._doc
+        if doc is None:
+            return []
 
         records: list[EnclosureRecord] = []
-        for obj in self._doc.Objects:
+        for obj in doc.Objects:
             if getattr(obj, "TypeId", "") != "Part::FeaturePython":
                 continue
             if hasattr(obj, "EnclosureId") and str(obj.EnclosureId):
@@ -204,8 +157,10 @@ class FreeCADDocumentAdapter:
     def toggle_visibility(
         self, enclosure_id: str, target: str
     ) -> dict[str, Any] | None:
-        if self._doc is None:
+        doc = self._doc
+        if doc is None:
             return None
+
         feature = self._find_feature_by_id(enclosure_id)
         if feature is None:
             return None
@@ -225,7 +180,7 @@ class FreeCADDocumentAdapter:
         else:
             return None
 
-        self._doc.recompute()
+        doc.recompute()
         return {
             "id": enclosure_id,
             "show_body": bool(getattr(feature, "ShowBody", True)),
@@ -238,9 +193,7 @@ class FreeCADDocumentAdapter:
         enclosure_id: str,
         parameters: EnclosureParameters,
     ) -> Any:
-        doc = self._doc
-        if doc is None:
-            raise RuntimeError("No active document")
+        doc = self._require_doc()
 
         feature = doc.addObject("Part::FeaturePython", name)
         feature.Label = name
@@ -287,3 +240,8 @@ class FreeCADDocumentAdapter:
             if hasattr(obj, "EnclosureId") and str(obj.EnclosureId) == enclosure_id:
                 return obj
         return None
+
+    def _require_doc(self) -> Any:
+        if self._doc is None:
+            raise RuntimeError("No active FreeCAD document")
+        return self._doc

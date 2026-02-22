@@ -13,18 +13,18 @@ SRC = ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
-from enclosure_workbench.integration.freecad_document import FreeCADDocumentAdapter  # noqa: E402
+from enclosure_workbench.integration.in_memory_document import InMemoryDocumentAdapter  # noqa: E402
 from enclosure_workbench.integration.object_registry import ObjectRegistry  # noqa: E402
 
 
 @pytest.fixture
-def writable_document() -> FreeCADDocumentAdapter:
-    return FreeCADDocumentAdapter(writable=True)
+def writable_document() -> InMemoryDocumentAdapter:
+    return InMemoryDocumentAdapter(writable=True)
 
 
 @pytest.fixture
-def read_only_document() -> FreeCADDocumentAdapter:
-    return FreeCADDocumentAdapter(writable=False)
+def read_only_document() -> InMemoryDocumentAdapter:
+    return InMemoryDocumentAdapter(writable=False)
 
 
 @pytest.fixture
