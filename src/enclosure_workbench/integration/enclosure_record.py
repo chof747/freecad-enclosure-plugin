@@ -11,6 +11,8 @@ from enclosure_workbench.domain.parameters import EnclosureParameters
 
 @dataclass
 class EnclosureRecord:
+    """Transport record representing one persisted enclosure instance."""
+
     id: str
     name: str
     parameters: EnclosureParameters

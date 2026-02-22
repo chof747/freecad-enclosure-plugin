@@ -13,6 +13,7 @@ def toggle_enclosure_visibility(
     *,
     document: DocumentAdapter | None = None,
 ) -> CommandResult:
+    """Toggle visibility flags for body/lid of the target enclosure."""
     adapter: DocumentAdapter = document or FreeCADDocumentAdapter()
     record = adapter.get_enclosure(enclosure_id)
     if record is None:

@@ -9,6 +9,8 @@ from .parameters import EnclosureParameters
 
 @dataclass(frozen=True)
 class EnclosureGeometry:
+    """Derived geometry dimensions and placements for enclosure construction."""
+
     body_outer: tuple[float, float, float]
     body_inner: tuple[float, float, float]
     lid_outer: tuple[float, float, float]
@@ -24,6 +26,7 @@ class EnclosureBuilder:
     """Build deterministic geometry descriptors from validated parameters."""
 
     def build(self, parameters: EnclosureParameters) -> EnclosureGeometry:
+        """Compute all deterministic enclosure dimensions from validated parameters."""
         wall = parameters.wall_thickness
         body_outer = (parameters.length, parameters.width, parameters.height)
         body_inner = (

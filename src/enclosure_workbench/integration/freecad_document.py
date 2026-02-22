@@ -25,7 +25,10 @@ PARAMETER_PROPERTY_MAP = {
 
 
 class FreeCADDocumentAdapter:
+    """Adapter that maps command operations to real FreeCAD document objects."""
+
     def __init__(self, writable: bool = True) -> None:
+        """Capture FreeCAD application/document handles for runtime operations."""
         self._writable = writable
         self._app = None
         self._doc = None
@@ -39,6 +42,7 @@ class FreeCADDocumentAdapter:
             self._doc = None
 
     def is_writable(self) -> bool:
+        """Return True when a writable adapter and active document are available."""
         return bool(self._writable and self._doc is not None)
 
     def add_enclosure(
@@ -48,6 +52,7 @@ class FreeCADDocumentAdapter:
         parameters: EnclosureParameters,
         geometry: EnclosureGeometry,
     ) -> EnclosureRecord:
+        """Create a new FeaturePython enclosure object and return its record."""
         feature = self._create_feature_object(name, enclosure_id, parameters)
         now = datetime.now(timezone.utc)
         return EnclosureRecord(
@@ -69,6 +74,7 @@ class FreeCADDocumentAdapter:
         parameters: EnclosureParameters,
         geometry: EnclosureGeometry,
     ) -> EnclosureRecord:
+        """Update one enclosure FeaturePython object by id and recompute."""
         doc = self._require_doc()
         feature = self._find_feature_by_id(enclosure_id)
         if feature is None:
@@ -84,6 +90,7 @@ class FreeCADDocumentAdapter:
         return updated
 
     def get_enclosure(self, enclosure_id: str) -> EnclosureRecord | None:
+        """Resolve an enclosure record from its FeaturePython object state."""
         feature = self._find_feature_by_id(enclosure_id)
         if feature is None:
             return None
@@ -129,6 +136,7 @@ class FreeCADDocumentAdapter:
         )
 
     def list_enclosures(self) -> list[EnclosureRecord]:
+        """List all enclosure records found in the active FreeCAD document."""
         doc = self._doc
         if doc is None:
             return []
@@ -148,6 +156,7 @@ class FreeCADDocumentAdapter:
         enclosure_id: str,
         parameters: dict[str, Any],
     ) -> dict[str, Any]:
+        """Return payload metadata for Data-section recompute integration."""
         return {
             "id": enclosure_id,
             "parameters": parameters,
@@ -157,6 +166,7 @@ class FreeCADDocumentAdapter:
     def toggle_visibility(
         self, enclosure_id: str, target: str
     ) -> dict[str, Any] | None:
+        """Toggle body/lid visibility flags on a FeaturePython enclosure object."""
         doc = self._doc
         if doc is None:
             return None
@@ -193,6 +203,7 @@ class FreeCADDocumentAdapter:
         enclosure_id: str,
         parameters: EnclosureParameters,
     ) -> Any:
+        """Create and initialize one `Part::FeaturePython` enclosure object."""
         doc = self._require_doc()
 
         feature = doc.addObject("Part::FeaturePython", name)
@@ -217,6 +228,7 @@ class FreeCADDocumentAdapter:
         feature: Any,
         parameters: EnclosureParameters,
     ) -> None:
+        """Write domain parameter values into FeaturePython Data properties."""
         feature.Length = float(parameters.length)
         feature.Width = float(parameters.width)
         feature.Height = float(parameters.height)
@@ -225,12 +237,14 @@ class FreeCADDocumentAdapter:
         feature.Gap = float(parameters.gap)
 
     def _parameters_from_feature(self, feature: Any) -> EnclosureParameters:
+        """Read domain parameters from FeaturePython Data properties."""
         values: dict[str, float] = {}
         for prop_name, param_name in PARAMETER_PROPERTY_MAP.items():
             values[param_name] = float(getattr(feature, prop_name))
         return EnclosureParameters(**values)
 
     def _find_feature_by_id(self, enclosure_id: str) -> Any | None:
+        """Find the FeaturePython object that owns the given enclosure id."""
         doc = self._doc
         if doc is None:
             return None
@@ -242,6 +256,7 @@ class FreeCADDocumentAdapter:
         return None
 
     def _require_doc(self) -> Any:
+        """Return active document or raise when unavailable."""
         if self._doc is None:
             raise RuntimeError("No active FreeCAD document")
         return self._doc

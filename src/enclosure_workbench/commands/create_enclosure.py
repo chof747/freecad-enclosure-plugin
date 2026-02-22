@@ -23,6 +23,11 @@ def create_enclosure_set(
     registry: ObjectRegistry | None = None,
     builder: EnclosureBuilder | None = None,
 ) -> CommandResult:
+    """Create one enclosure set and persist it through the active adapter.
+
+    The command validates/merges parameters, allocates a unique identity, builds
+    deterministic geometry metadata, and returns a stable payload contract.
+    """
     adapter: DocumentAdapter = document or FreeCADDocumentAdapter()
     identities = registry or ObjectRegistry()
     enclosure_builder = builder or EnclosureBuilder()

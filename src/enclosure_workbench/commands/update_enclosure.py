@@ -20,6 +20,7 @@ def update_enclosure_set(
     document: DocumentAdapter | None = None,
     builder: EnclosureBuilder | None = None,
 ) -> CommandResult:
+    """Update an existing enclosure set by id and recompute its geometry."""
     adapter: DocumentAdapter = document or FreeCADDocumentAdapter()
     enclosure_builder = builder or EnclosureBuilder()
 

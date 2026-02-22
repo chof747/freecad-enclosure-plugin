@@ -12,12 +12,16 @@ from enclosure_workbench.integration.enclosure_record import EnclosureRecord
 
 
 class InMemoryDocumentAdapter:
+    """Lightweight adapter used by tests when FreeCAD is not involved."""
+
     def __init__(self, writable: bool = True) -> None:
+        """Initialize an in-memory store and visibility state map."""
         self._writable = writable
         self._records: dict[str, EnclosureRecord] = {}
         self._visibility: dict[str, dict[str, bool]] = {}
 
     def is_writable(self) -> bool:
+        """Return the configured write capability for this adapter."""
         return self._writable
 
     def add_enclosure(
@@ -27,6 +31,7 @@ class InMemoryDocumentAdapter:
         parameters: EnclosureParameters,
         geometry: EnclosureGeometry,
     ) -> EnclosureRecord:
+        """Store a newly created enclosure record in memory."""
         now = datetime.now(timezone.utc)
         record = EnclosureRecord(
             id=enclosure_id,
@@ -50,6 +55,7 @@ class InMemoryDocumentAdapter:
         parameters: EnclosureParameters,
         geometry: EnclosureGeometry,
     ) -> EnclosureRecord:
+        """Update an existing in-memory enclosure entry."""
         record = self._records[enclosure_id]
         record.parameters = parameters
         record.geometry = geometry
@@ -57,10 +63,12 @@ class InMemoryDocumentAdapter:
         return deepcopy(record)
 
     def get_enclosure(self, enclosure_id: str) -> EnclosureRecord | None:
+        """Return a copy of one enclosure record by id, if present."""
         record = self._records.get(enclosure_id)
         return deepcopy(record) if record else None
 
     def list_enclosures(self) -> list[EnclosureRecord]:
+        """Return copies of all enclosure records."""
         return [deepcopy(record) for record in self._records.values()]
 
     def apply_data_section_update(
@@ -68,6 +76,7 @@ class InMemoryDocumentAdapter:
         enclosure_id: str,
         parameters: dict[str, Any],
     ) -> dict[str, Any]:
+        """Return metadata payload for Data-section update tests."""
         return {
             "id": enclosure_id,
             "parameters": parameters,
@@ -77,6 +86,7 @@ class InMemoryDocumentAdapter:
     def toggle_visibility(
         self, enclosure_id: str, target: str
     ) -> dict[str, Any] | None:
+        """Toggle stored visibility flags for body/lid entries."""
         if enclosure_id not in self._records:
             return None
 
