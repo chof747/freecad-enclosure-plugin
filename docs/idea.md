@@ -20,5 +20,11 @@ These can serve as inspiration or starting points for building a more automated 
 
 ## Architecture Mapping
 
-The current capability mapping and extension boundaries are tracked in
-`docs/architecture/capability-map.md`.
+The current capability mapping and extension boundaries are tracked in:
+
+- `docs/architecture/capability-map.md`
+- `docs/architecture/extension-boundaries.md`
+- `docs/architecture/compatibility.md`
+
+Feature requirements and acceptance alignment are tracked in
+`specs/001-bootstrap-enclosure-workbench/spec.md`.

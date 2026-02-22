@@ -6,12 +6,12 @@ Map current and future enclosure capabilities to stable extension boundaries.
 
 ## Capability Matrix
 
-| Capability | Status | Integration Boundary | Notes |
+| Capability ID | Status | Integration Boundary | Notes |
 |-----------|--------|----------------------|-------|
-| Base enclosure (body + lid) | Implemented (feature 001) | `domain/enclosure_builder.py`, `commands/create_enclosure.py` | Parametric, mm-based defaults and validation |
-| Board import | Planned | `integration/` adapter layer | Source expected from KiCad-derived model workflows |
-| Screw-hole automation | Planned | `domain/` placement submodule | Depends on board mounting point inputs |
-| Connector/component cutout automation | Planned | `domain/` cutout submodule | Depends on protrusion/clearance inputs |
+| `base_enclosure` | `implemented` | `src/enclosure_workbench/domain/enclosure_builder.py`, `src/enclosure_workbench/commands/create_enclosure.py` | Parametric, mm-based defaults and validation |
+| `board_import` | `planned` | `src/enclosure_workbench/integration/` adapter layer | Source expected from KiCad-derived model workflows |
+| `screw_hole_automation` | `planned` | `src/enclosure_workbench/domain/` placement module | Depends on board mounting point inputs |
+| `connector_cutout_automation` | `planned` | `src/enclosure_workbench/domain/` cutout module | Depends on protrusion/clearance inputs |
 
 ## Rules
 

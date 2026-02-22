@@ -56,3 +56,10 @@
 - Alternatives considered:
   - Include board import now: high risk to timeline and architecture churn.
   - Include placeholders without boundaries: unclear acceptance and test scope.
+
+## Reuse-first update (implementation)
+
+- Reused Python standard library dataclasses and typing for domain contracts.
+- Reused pytest and flake8 for test/lint quality gates via `uv run` commands.
+- Chose custom minimal FreeCAD adapter abstraction (`integration/freecad_document.py`)
+  to isolate host integration and allow deterministic tests without FreeCAD runtime.
