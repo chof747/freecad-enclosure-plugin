@@ -1,15 +1,11 @@
 <!--
 Sync Impact Report
-- Version change: N/A -> 1.0.0
+- Version change: 1.0.0 -> 1.1.0
 - Modified principles:
-  - Template Principle 1 -> I. FreeCAD-Native Integration First
-  - Template Principle 2 -> II. Library-First and Reuse-First Engineering
-  - Template Principle 3 -> III. Parametric Integrity for Enclosure Models
-  - Template Principle 4 -> IV. Clean Code with Mandatory Lint Gates
-  - Template Principle 5 -> V. Reproducible Python Tooling with uv
+  - IV. Clean Code with Mandatory Lint Gates -> IV. Clean Code, Mandatory Docstrings,
+    and Lint Gates
 - Added sections:
-  - Technical Standards
-  - Development Workflow & Quality Gates
+  - None
 - Removed sections:
   - None
 - Templates requiring updates:
@@ -17,6 +13,8 @@ Sync Impact Report
   - ✅ updated: .specify/templates/spec-template.md
   - ✅ updated: .specify/templates/tasks-template.md
   - ✅ reviewed (no change needed): .opencode/command/speckit.constitution.md
+  - ✅ updated: README.md
+  - ✅ updated: AGENTS.md
 - Follow-up TODOs:
   - None
 -->
@@ -45,11 +43,13 @@ units, default values, and validation constraints. Geometry builders MUST be
 deterministic for the same parameter set and MUST avoid hidden shape constants.
 Rationale: deterministic parametric behavior is the core value of enclosure design.
 
-### IV. Clean Code with Mandatory Lint Gates
+### IV. Clean Code, Mandatory Docstrings, and Lint Gates
 All Python changes MUST pass `flake8` with project configuration before merge.
 Code MUST keep clear module boundaries (UI command wiring, parametric domain logic,
-and FreeCAD integration adapters separated) and avoid dead code. Rationale: clean,
-linted code keeps plugin evolution safe as feature complexity grows.
+and FreeCAD integration adapters separated) and avoid dead code. All classes,
+methods, and functions added or modified in feature work MUST include meaningful
+docstrings that explain purpose and behavior. Rationale: clean, linted, and
+well-documented code keeps plugin evolution safe as feature complexity grows.
 
 ### V. Reproducible Python Tooling with uv
 Dependency management and Python command execution MUST use `uv` (`uv sync`,
@@ -64,6 +64,7 @@ onboarding and build drift.
 - Workbench or command registration MUST be present for user-facing features.
 - Parametric APIs MUST define stable parameter names to preserve model reuse.
 - Static analysis baseline MUST include `flake8` and pass before review completion.
+- Python classes, methods, and functions MUST include descriptive docstrings.
 - Project scripts and instructions MUST prefer `uv` commands for consistency.
 
 ## Development Workflow & Quality Gates
@@ -72,7 +73,8 @@ onboarding and build drift.
 2. Plan implementation with a Constitution Check that verifies all five principles.
 3. Build the smallest usable FreeCAD integration slice first.
 4. Add or extend domain logic using reuse-first library selection.
-5. Run quality gates: lint via `uv run flake8` and a FreeCAD integration smoke run.
+5. Run quality gates: lint via `uv run flake8`, verify docstrings on changed
+   classes/methods/functions, and execute a FreeCAD integration smoke run.
 6. Complete review only when constitution compliance is explicitly confirmed.
 
 ## Governance
@@ -90,4 +92,4 @@ Versioning policy for this constitution follows semantic versioning:
 Compliance review is required in every implementation plan and pull request.
 Reviewers MUST block merge when constitution gates are unmet or evidence is absent.
 
-**Version**: 1.0.0 | **Ratified**: 2026-02-19 | **Last Amended**: 2026-02-19
+**Version**: 1.1.0 | **Ratified**: 2026-02-19 | **Last Amended**: 2026-02-22

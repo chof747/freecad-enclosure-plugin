@@ -90,6 +90,11 @@
 - **FR-004**: System MUST [data requirement, e.g., "persist user preferences"]
 - **FR-005**: System MUST [behavior, e.g., "log all security events"]
 
+### Documentation & Maintainability Requirements
+
+- **DMR-001**: Code introduced or modified by this feature MUST include docstrings
+  for classes, methods, and functions.
+
 *Example of marking unclear requirements:*
 
 - **FR-006**: System MUST authenticate users via [NEEDS CLARIFICATION: auth method not specified - email/password, SSO, OAuth?]

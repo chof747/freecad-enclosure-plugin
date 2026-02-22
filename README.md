@@ -21,6 +21,10 @@ uv run flake8 .
 uv run pytest
 ```
 
+Code documentation baseline:
+
+- Add meaningful docstrings for classes, methods, and functions you introduce or modify.
+
 Focused shortcuts:
 
 ```bash

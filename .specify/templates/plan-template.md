@@ -33,6 +33,13 @@
 
 [Gates determined based on constitution file]
 
+- FreeCAD-native integration path is defined and smoke-testable.
+- Reuse-first decisions are documented for new dependencies/utilities.
+- Parametric inputs, defaults, units, and validation rules are explicit.
+- Code quality gates include `uv run flake8` and docstring coverage for changed
+  classes, methods, and functions.
+- Tooling and scripts use `uv` unless an exception is documented.
+
 ## Project Structure
 
 ### Documentation (this feature)

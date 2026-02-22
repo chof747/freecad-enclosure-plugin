@@ -26,4 +26,5 @@ Python 3.11 (FreeCAD-compatible runtime): Follow standard conventions
 - 001-bootstrap-enclosure-workbench: Added Python 3.11 (FreeCAD-compatible runtime) + FreeCAD Python API, Part module, PySide (UI), pytest, flake8
 
 <!-- MANUAL ADDITIONS START -->
+- Code documentation rule: Add docstrings for classes, methods, and functions that are introduced or modified.
 <!-- MANUAL ADDITIONS END -->
