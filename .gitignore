@@ -1,0 +1,16 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+dist/
+*.egg-info/
+
+.DS_Store
+Thumbs.db
+*.tmp
+*.swp
+.idea/
+uv.sync
+**/*.FCStd
+**/*.FCBak
+scrap/

@@ -31,11 +31,14 @@
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-- [ ] FreeCAD-native integration is planned in the earliest deliverable slice.
-- [ ] Reuse-first analysis is documented; custom code is justified where needed.
-- [ ] Parametric contract defines names, units, defaults, and validation constraints.
-- [ ] Clean code quality gate is defined with `uv run flake8`.
-- [ ] Tooling and dependency commands use `uv` (`uv sync`, `uv run`).
+[Gates determined based on constitution file]
+
+- FreeCAD-native integration path is defined and smoke-testable.
+- Reuse-first decisions are documented for new dependencies/utilities.
+- Parametric inputs, defaults, units, and validation rules are explicit.
+- Code quality gates include `uv run flake8` and docstring coverage for changed
+  classes, methods, and functions.
+- Tooling and scripts use `uv` unless an exception is documented.
 
 ## Project Structure
 

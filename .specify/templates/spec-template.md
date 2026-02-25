@@ -90,21 +90,15 @@
 - **FR-004**: System MUST [data requirement, e.g., "persist user preferences"]
 - **FR-005**: System MUST [behavior, e.g., "log all security events"]
 
+### Documentation & Maintainability Requirements
+
+- **DMR-001**: Code introduced or modified by this feature MUST include docstrings
+  for classes, methods, and functions.
+
 *Example of marking unclear requirements:*
 
 - **FR-006**: System MUST authenticate users via [NEEDS CLARIFICATION: auth method not specified - email/password, SSO, OAuth?]
 - **FR-007**: System MUST retain user data for [NEEDS CLARIFICATION: retention period not specified]
-
-### Integration & Tooling Requirements *(mandatory)*
-
-- **ITR-001**: Feature MUST define its FreeCAD in-app integration point (command,
-  workbench action, or equivalent).
-- **ITR-002**: Feature MUST document reuse-first dependency decisions, including why
-  custom implementation is needed when reuse is not selected.
-- **ITR-003**: Feature MUST define parameter names, units, defaults, and validation
-  constraints for all user-controlled enclosure parameters.
-- **ITR-004**: Feature MUST define quality gates including `uv run flake8` and an
-  in-app FreeCAD smoke verification path.
 
 ### Key Entities *(include if feature involves data)*
 

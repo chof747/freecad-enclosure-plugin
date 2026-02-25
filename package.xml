@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package format="1" xmlns="https://wiki.freecad.org/Package_Metadata">
+  <name>Enclosure Workbench</name>
+  <description>Parametric enclosure FreeCAD workbench scaffold.</description>
+  <version>0.1.0</version>
+  <date>2026-02-21</date>
+  <maintainer email="maintainers@example.com">Enclosure Workbench Maintainers</maintainer>
+  <license>MIT</license>
+  <content>
+    <workbench>
+      <classname>EnclosureWorkbench</classname>
+      <subdirectory>./</subdirectory>
+    </workbench>
+  </content>
+</package>
